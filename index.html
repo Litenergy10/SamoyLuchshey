@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Любимой Лизе от её Айдара — Сквозь любые километры</title>
+
+    <!-- Google Fonts: Cormorant Garamond & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#080510',
+                        velvet: '#120a24',
+                        crimson: '#ff4d8d',
+                        roseGold: '#ffb3c6',
+                        champagne: '#d4af37',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #120a24 0%, #080510 60%, #05030a 100%);
+            color: #fff1f2;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #080510; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ff4d8d, #d4af37);
+            border-radius: 9999px;
+        }
+
+        /* Фоновый и эффектный Canvas */
+        #bgCanvas, #fxCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #bgCanvas { z-index: 0; }
+        #fxCanvas { z-index: 60; }
+
+        /* Glassmorphism карточки */
+        .glass-card {
+            background: linear-gradient(145deg, rgba(26, 14, 44, 0.78) 0%, rgba(11, 7, 22, 0.9) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 179, 198, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-pill {
+            background: rgba(20, 11, 36, 0.84);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 179, 198, 0.26);
+        }
+
+        /* Градиентный текст розового золота */
+        .text-rosegold {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffb3c6 45%, #ff4d8d 80%, #f3d078 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Сургучная печать конверта */
+        .wax-seal {
+            background: radial-gradient(circle at 30% 30%, #ff4d8d, #be123c 65%, #4c0519 100%);
+            box-shadow: 0 10px 28px rgba(255, 77, 141, 0.55), inset 0 2px 5px rgba(255, 255, 255, 0.4);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+        }
+        .wax-seal:hover {
+            transform: scale(1.08) rotate(5deg);
+            box-shadow: 0 14px 36px rgba(255, 77, 141, 0.8);
+        }
+
+        /* Анимация распускания бутона в букете */
+        .flower-node {
+            cursor: pointer;
+            transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+        }
+        .flower-node:hover {
+            filter: drop-shadow(0 0 14px rgba(255, 77, 141, 0.9));
+        }
+
+        /* Анимация карточки причин */
+        .reason-anim {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+        .reason-out {
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+        }
+
+        /* Волна объятия на весь экран */
+        @keyframes hugShockwave {
+            0% { opacity: 0; transform: scale(0.8); }
+            30% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.08); }
+        }
+        .hug-wave-run {
+            animation: hugShockwave 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Эквалайзер музыки */
+        .eq-bar {
+            width: 3px;
+            background: #ffb3c6;
+            border-radius: 9999px;
+            transition: height 0.2s ease;
+        }
+        .playing .eq-bar:nth-child(1) { animation: eqAnim 0.75s ease-in-out infinite alternate; }
+        .playing .eq-bar:nth-child(2) { animation: eqAnim 0.55s ease-in-out 0.2s infinite alternate; }
+        .playing .eq-bar:nth-child(3) { animation: eqAnim 0.85s ease-in-out 0.35s infinite alternate; }
+        .playing .eq-bar:nth-child(4) { animation: eqAnim 0.65s ease-in-out 0.1s infinite alternate; }
+
+        @keyframes eqAnim {
+            0% { height: 4px; }
+            100% { height: 15px; }
+        }
+
+        /* Курсор печатной машинки */
+        .typing-cursor::after {
+            content: '|';
+            color: #ffb3c6;
+            animation: blinkCursor 0.9s step-end infinite;
+            margin-left: 2px;
+        }
+        @keyframes blinkCursor {
+            50% { opacity: 0; }
+        }
+
+        /* Свечение луны */
+        .moon-sphere {
+            background: radial-gradient(circle at 30% 30%, #fffbeb 0%, #fde68a 45%, #d4af37 85%, #78350f 100%);
+            box-shadow: 0 0 35px rgba(253, 230, 138, 0.45), 0 0 75px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-pink-500/30 selection:text-rose-100">
+
+    <!-- Оверлей волны тепла при объятии сквозь экран -->
+    <div id="hugWaveOverlay" class="fixed inset-0 z-40 pointer-events-none opacity-0" style="background: radial-gradient(circle at center, rgba(255,77,141,0.36) 0%, rgba(212,175,55,0.2) 48%, transparent 82%);"></div>
+
+    <!-- Фоновые Canvas -->
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- 1. ВЕРХНЯЯ ЛИПКАЯ ПАНЕЛЬ -->
+    <header class="sticky top-0 z-40 px-3 sm:px-6 py-3 flex items-center justify-between gap-2 bg-gradient-to-b from-[#080510]/90 via-[#080510]/65 to-transparent backdrop-blur-sm">
+        <div class="glass-pill px-3.5 py-2 rounded-full flex items-center gap-2 text-xs sm:text-sm text-rose-100 shadow-lg max-w-[65%]">
+            <span class="w-2 h-2 rounded-full bg-[#ff4d8d] animate-ping shrink-0"></span>
+            <span class="truncate font-medium text-rose-200">Любимой Лизе от её Айдара</span>
+        </div>
+
+        <button type="button" id="musicToggleBtn" onclick="toggleAmbientMusic()" class="glass-pill px-3.5 sm:px-4 py-2 rounded-full flex items-center gap-2 text-xs sm:text-sm text-rose-100 hover:border-rose-300/60 transition-all shadow-lg shrink-0">
+            <div class="flex items-end gap-[2px] h-4 w-4 justify-center">
+                <span class="eq-bar h-1.5"></span>
+                <span class="eq-bar h-3"></span>
+                <span class="eq-bar h-2"></span>
+                <span class="eq-bar h-2.5"></span>
+            </div>
+            <span id="musicBtnLabel" class="font-medium">Мелодия любви</span>
+        </button>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pb-28">
+
+        <!-- 2. HERO СЕКЦИЯ + ЖИВОЙ ТАЙМЕР ОТНОШЕНИЙ -->
+        <section class="pt-6 sm:pt-12 pb-14 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-rose-200/90 text-[11px] sm:text-xs tracking-[0.18em] uppercase mb-5">
+                <span>✦ СКВОЗЬ ЛЮБЫЕ КИЛОМЕТРЫ ✦</span>
+            </div>
+
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.1] text-rosegold mb-5">
+                Ты — моё самое<br>красивое чудо
+            </h1>
+
+            <p class="max-w-xl mx-auto text-sm sm:text-base text-rose-100/80 font-light leading-relaxed mb-8 px-1">
+                Пусть сейчас нас разделяют города и километры, для моего сердца ты всегда ближе всех. Каждый наш звонок и каждое твоё сообщение делают меня самым счастливым.
+            </p>
+
+            <!-- Карточка живого таймера -->
+            <div class="max-w-xl mx-auto glass-card rounded-3xl p-5 sm:p-8 mb-8 relative overflow-hidden">
+                <div class="absolute -top-20 -right-20 w-44 h-44 bg-[#ff4d8d]/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-20 -left-20 w-44 h-44 bg-[#d4af37]/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-1.5 mb-5">
+                    <span class="text-xs uppercase tracking-[0.22em] text-rose-200/75 font-medium">Мы вместе уже</span>
+                    <span class="text-xs text-rose-300">с 23 июня 2026 г.</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 sm:gap-4">
+                    <div class="bg-black/45 border border-rose-200/15 rounded-2xl py-3.5 px-1 sm:p-4">
+                        <div id="tDays" class="font-serif text-3xl sm:text-5xl font-bold text-rose-50">0</div>
+                        <div id="tDaysLabel" class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-300/75 mt-1">дней</div>
+                    </div>
+                    <div class="bg-black/45 border border-rose-200/15 rounded-2xl py-3.5 px-1 sm:p-4">
+                        <div id="tHours" class="font-serif text-3xl sm:text-5xl font-bold text-rose-50">00</div>
+                        <div id="tHoursLabel" class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-300/75 mt-1">часов</div>
+                    </div>
+                    <div class="bg-black/45 border border-rose-200/15 rounded-2xl py-3.5 px-1 sm:p-4">
+                        <div id="tMinutes" class="font-serif text-3xl sm:text-5xl font-bold text-rose-50">00</div>
+                        <div id="tMinutesLabel" class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-300/75 mt-1">минут</div>
+                    </div>
+                    <div class="bg-black/45 border border-rose-200/15 rounded-2xl py-3.5 px-1 sm:p-4">
+                        <div id="tSeconds" class="font-serif text-3xl sm:text-5xl font-bold text-[#ff4d8d]">00</div>
+                        <div id="tSecondsLabel" class="text-[10px] sm:text-xs uppercase tracking-wider text-rose-300/75 mt-1">секунд</div>
+                    </div>
+                </div>
+
+                <p class="font-serif italic text-base sm:text-lg text-rose-200/75 mt-5">
+                    «Расстояние измеряется в километрах, а наша любовь — в бесконечности...»
+                </p>
+            </div>
+
+            <!-- Главные кнопки навигации и действий -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                <button type="button" onclick="goToAndBloomBouquet(event)" class="w-full sm:w-auto px-7 py-3.5 rounded-full bg-gradient-to-r from-[#ff4d8d] to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-medium text-sm shadow-lg shadow-pink-600/35 transition-transform active:scale-95">
+                    Собрать живой букет 💐
+                </button>
+                <button type="button" onclick="scrollToSection('letter-section')" class="w-full sm:w-auto px-7 py-3.5 rounded-full glass-pill hover:bg-white/10 text-rose-100 font-medium text-sm transition-transform active:scale-95">
+                    Открыть письмо 💌
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. ИНТЕРАКТИВНЫЙ БУКЕТ: «ЖИВОЙ БУКЕТ ДЛЯ ТЕБЯ» -->
+        <section id="bouquet-section" class="py-12 sm:py-16">
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-[0.22em] text-[#d4af37]">Цветы, которые никогда не завянут</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-rosegold mt-1.5">Живой букет для тебя</h2>
+                <p class="text-xs sm:text-sm text-rose-100/75 mt-2 max-w-md mx-auto">
+                    Нажми «Распустить букет» или коснись любого из 7 бутонов, чтобы увидеть мою любовную записку внутри каждого цветка
+                </p>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 sm:p-9 relative overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <!-- SVG Сцена букета -->
+                    <div class="md:col-span-6 flex justify-center">
+                        <svg id="bouquetSvg" viewBox="0 0 360 390" class="w-full max-w-[300px] sm:max-w-[320px] h-auto select-none drop-shadow-[0_12px_28px_rgba(255,77,141,0.3)]">
+                            <defs>
+                                <radialGradient id="roseGrad" cx="35%" cy="30%" r="70%">
+                                    <stop offset="0%" stop-color="#ffb3c6"/>
+                                    <stop offset="45%" stop-color="#ff4d8d"/>
+                                    <stop offset="100%" stop-color="#881337"/>
+                                </radialGradient>
+                                <radialGradient id="peonyGrad" cx="40%" cy="35%" r="65%">
+                                    <stop offset="0%" stop-color="#fff1f2"/>
+                                    <stop offset="55%" stop-color="#fda4af"/>
+                                    <stop offset="100%" stop-color="#e11d48"/>
+                                </radialGradient>
+                                <radialGradient id="goldGrad" cx="35%" cy="35%" r="70%">
+                                    <stop offset="0%" stop-color="#fef3c7"/>
+                                    <stop offset="55%" stop-color="#f3d078"/>
+                                    <stop offset="100%" stop-color="#b45309"/>
+                                </radialGradient>
+                                <linearGradient id="vaseGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="rgba(255,179,198,0.28)"/>
+                                    <stop offset="100%" stop-color="rgba(212,175,55,0.16)"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Стебли и листья -->
+                            <g stroke="#34d399" stroke-linecap="round" fill="none" opacity="0.8">
+                                <path d="M180 345 Q176 220 180 108" stroke-width="4"/>
+                                <path d="M180 345 Q145 240 108 150" stroke-width="3.5"/>
+                                <path d="M180 345 Q215 240 252 150" stroke-width="3.5"/>
+                                <path d="M180 345 Q158 235 140 190" stroke-width="3"/>
+                                <path d="M180 345 Q202 235 220 190" stroke-width="3"/>
+                                <path d="M180 345 Q130 270 84 218" stroke-width="3"/>
+                                <path d="M180 345 Q230 270 276 218" stroke-width="3"/>
+                                <!-- Листья -->
+                                <path d="M142 246 Q114 236 108 256 Q130 264 142 246" fill="#10b981" stroke="none" opacity="0.7"/>
+                                <path d="M218 246 Q246 236 252 256 Q230 264 218 246" fill="#10b981" stroke="none" opacity="0.7"/>
+                                <path d="M168 205 Q138 190 132 212 Q154 220 168 205" fill="#059669" stroke="none" opacity="0.75"/>
+                                <path d="M192 205 Q222 190 228 212 Q206 220 192 205" fill="#059669" stroke="none" opacity="0.75"/>
+                            </g>
+
+                            <!-- Дизайнерская обёртка и атласный бант -->
+                            <polygon points="104,228 256,228 206,358 154,358" fill="url(#vaseGlass)" stroke="rgba(255,179,198,0.35)" stroke-width="1.5"/>
+                            <path d="M156 294 Q180 304 204 294" stroke="#ff4d8d" stroke-width="6" fill="none" stroke-linecap="round"/>
+                            <path d="M180 298 C154 280, 144 310, 180 300 C216 310, 206 280, 180 298 Z" fill="#ff4d8d"/>
+                            <path d="M180 300 L162 334 M180 300 L198 334" stroke="#ff4d8d" stroke-width="3.5" stroke-linecap="round"/>
+
+                            <!-- Контейнер для 7 бутонов / распустившихся цветов -->
+                            <g id="bouquetFlowersLayer"></g>
+                        </svg>
+                    </div>
+
+                    <!-- Карточка записки с выбранного цветка + кнопки управления -->
+                    <div class="md:col-span-6 flex flex-col justify-between">
+                        <div class="bg-black/45 border border-rose-200/20 rounded-2xl p-5 sm:p-6 mb-5 min-h-[165px] flex flex-col justify-center">
+                            <div class="flex items-center justify-between text-[11px] uppercase tracking-widest text-[#d4af37] mb-2">
+                                <span id="flowerNoteBadge">🌸 Бутоны ждут прикосновения</span>
+                                <span><strong id="bloomedCounter" class="text-rose-200">0</strong> / 7</span>
+                            </div>
+                            <p id="flowerNoteText" class="font-serif italic text-xl sm:text-2xl text-rose-50 leading-snug">
+                                «Нажми “Распустить букет ✨” или коснись любого бутона на картинке, чтобы прочитать записку для тебя...»
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="button" onclick="bloomAllFlowers(event)" class="flex-1 py-3.5 px-5 rounded-full bg-gradient-to-r from-[#ff4d8d] to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-medium text-xs sm:text-sm shadow-lg shadow-pink-600/30 transition-transform active:scale-95">
+                                Распустить букет ✨
+                            </button>
+                            <button type="button" onclick="showerRosePetals(event)" class="flex-1 py-3.5 px-5 rounded-full glass-pill hover:bg-white/10 text-rose-100 font-medium text-xs sm:text-sm transition-transform active:scale-95">
+                                Осыпать лепестками 🌸
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ТАЙНОЕ ПИСЬМО СКВОЗЬ РАССТОЯНИЕ -->
+        <section id="letter-section" class="py-12 sm:py-16">
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-[0.22em] text-rose-300/80">Только для твоих глаз</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-rosegold mt-1.5">Письмо сквозь расстояние</h2>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <!-- Закрытый конверт с сургучной печатью -->
+                <div id="envelopeClosed" onclick="openLoveLetter(event)" class="glass-card rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden cursor-pointer hover:border-rose-300/50 transition-all">
+                    <div class="absolute inset-0 opacity-25 pointer-events-none" style="background: radial-gradient(circle at 50% 0%, rgba(255,77,141,0.45), transparent 70%);"></div>
+
+                    <p class="font-serif italic text-xl text-rose-200/90">Лично в руки</p>
+                    <p class="font-serif text-3xl sm:text-4xl font-semibold text-rose-50 mt-1">Любимой Лизе</p>
+
+                    <div class="my-7 flex justify-center">
+                        <button type="button" class="wax-seal w-24 h-24 rounded-full flex flex-col items-center justify-center text-white border-2 border-amber-200/40">
+                            <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span class="text-[9px] uppercase tracking-widest mt-1 font-semibold">Печать</span>
+                        </button>
+                    </div>
+
+                    <p class="text-xs text-rose-200/75">Нажми на печать, чтобы открыть письмо</p>
+                </div>
+
+                <!-- Открытое письмо -->
+                <div id="envelopeOpened" class="hidden glass-card rounded-3xl p-6 sm:p-10 relative">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-rose-200/15 pb-4 mb-5">
+                        <span class="text-xs uppercase tracking-widest text-rose-300">♥ С любовью к тебе</span>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="skipTypingBtn" onclick="finishLetterTyping()" class="text-xs px-3 py-1.5 rounded-full bg-[#ff4d8d]/25 hover:bg-[#ff4d8d]/40 text-rose-100 transition-colors">
+                                Показать сразу
+                            </button>
+                            <button type="button" onclick="closeLoveLetter()" class="text-xs px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-rose-200/75 transition-colors">
+                                Свернуть
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="letterContent" class="font-serif text-xl sm:text-2xl leading-relaxed text-rose-50 whitespace-pre-line min-h-[200px] typing-cursor"></div>
+
+                    <div id="letterSignature" class="mt-7 pt-5 border-t border-rose-200/15 flex items-center justify-between opacity-0 transition-opacity duration-500">
+                        <div>
+                            <p class="text-[11px] text-rose-300/70 uppercase tracking-widest">Навсегда твой,</p>
+                            <p class="font-serif italic text-xl sm:text-2xl text-rose-100 mt-0.5">Твой Айдар</p>
+                        </div>
+                        <span class="text-3xl">❤️</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 25 ПРИЧИН, ПОЧЕМУ Я ЛЮБЛЮ ТЕБЯ -->
+        <section id="reasons-section" class="py-12 sm:py-16">
+            <div class="text-center mb-8">
+                <span class="text-xs uppercase tracking-[0.22em] text-rose-300/80">Бесконечный список</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-rosegold mt-1.5">25 причин, почему я люблю тебя</h2>
+                <p class="text-xs sm:text-sm text-rose-100/70 mt-2">Нажимай на карточку или кнопку ниже, чтобы листать наши моменты</p>
+            </div>
+
+            <div class="max-w-xl mx-auto">
+                <div onclick="nextReason(event)" class="glass-card rounded-3xl p-7 sm:p-11 min-h-[240px] flex flex-col items-center justify-center text-center cursor-pointer select-none relative overflow-hidden hover:border-rose-300/45 transition-all">
+                    <div class="w-full flex items-center justify-between text-xs text-rose-300/75 uppercase tracking-widest mb-4">
+                        <span>Причина #<strong id="reasonIndex" class="text-rose-100">1</strong> из <span id="reasonTotal">25</span></span>
+                        <span class="text-[#ff4d8d] text-base">♥</span>
+                    </div>
+
+                    <div id="reasonTextWrapper" class="reason-anim my-auto py-3">
+                        <p id="reasonText" class="font-serif text-2xl sm:text-3xl leading-snug text-rose-50 font-medium"></p>
+                    </div>
+
+                    <p class="text-[11px] text-rose-300/65 mt-4">Коснись карточки для следующей причины →</p>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mt-5">
+                    <button type="button" onclick="prevReason()" class="px-5 py-2.5 rounded-full glass-pill text-xs sm:text-sm text-rose-200 hover:bg-white/10 transition-all">
+                        ← Назад
+                    </button>
+                    <button type="button" onclick="nextReason(event)" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#ff4d8d] to-rose-600 text-xs sm:text-sm text-white font-medium shadow-md transition-transform active:scale-95">
+                        Следующая причина ❤️
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. ХАБ СВЯЗИ НА РАССТОЯНИИ: «ДАЖЕ СКВОЗЬ КИЛОМЕТРЫ...» -->
+        <section id="distance-section" class="py-12 sm:py-16">
+            <div class="text-center mb-9">
+                <span class="text-xs uppercase tracking-[0.22em] text-[#d4af37]">Синхронность наших сердец</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-rosegold mt-1.5">Даже сквозь километры...</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-9">
+                <!-- Одна луна на двоих -->
+                <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
+                    <div class="flex items-center justify-between gap-2 mb-5">
+                        <span class="text-xs uppercase tracking-[0.18em] text-[#d4af37] font-medium">Одна луна на двоих 🌙</span>
+                        <span id="moonPhaseBadge" class="text-[11px] px-3 py-1 rounded-full bg-white/10 text-rose-100">Фаза луны</span>
+                    </div>
+
+                    <div class="flex items-center gap-5 my-2">
+                        <div class="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-full moon-sphere relative overflow-hidden">
+                            <span class="absolute top-3 left-4 w-2.5 h-2.5 rounded-full bg-amber-900/20"></span>
+                            <span class="absolute bottom-4 right-5 w-3.5 h-3.5 rounded-full bg-amber-900/20"></span>
+                            <div id="moonShadow" class="absolute inset-0 rounded-full bg-[#080510]/85 transition-transform duration-700"></div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs text-rose-300/80 mb-1">Освещённость: <strong id="moonIllumination" class="text-rose-50">50%</strong></div>
+                            <h3 class="font-serif text-2xl font-semibold text-rose-50 mb-1.5">Мы под одним небом</h3>
+                            <p class="text-xs text-rose-100/75 leading-relaxed">
+                                Где бы ты ни была сегодня вечером, просто взгляни на небо — эта же луна прямо сейчас светит и мне.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Обнять сквозь экран -->
+                <div class="glass-card rounded-3xl p-6 sm:p-8 text-center flex flex-col items-center justify-between">
+                    <div class="w-full flex items-center justify-between text-xs mb-4">
+                        <span class="uppercase tracking-[0.18em] text-rose-300">Телепортация тепла</span>
+                        <span class="text-rose-200/80">Объятий отправлено: <strong id="hugCounter" class="text-rose-50">0</strong></span>
+                    </div>
+
+                    <button type="button" onclick="sendScreenHug(event)" class="my-2 px-7 py-4 rounded-full bg-gradient-to-r from-[#ff4d8d] via-rose-500 to-amber-500 text-white font-semibold text-sm sm:text-base shadow-[0_0_35px_rgba(255,77,141,0.5)] hover:scale-105 active:scale-95 transition-transform">
+                        Обнять сквозь экран 🫂
+                    </button>
+
+                    <p id="hugStatusText" class="font-serif italic text-lg sm:text-xl text-rose-100 mt-3 min-h-[54px] flex items-center justify-center">
+                        «Нажми, чтобы отправить тёплую волну объятий прямо ко мне ❤️»
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3 интерактивные капсулы «Открой, когда...» -->
+            <div class="text-center mb-6">
+                <h3 class="font-serif text-2xl sm:text-3xl font-semibold text-rose-50">Капсулы «Открой, когда...»</h3>
+                <p class="text-xs text-rose-200/70 mt-1">Нажми на любой конверт, который подходит твоему настроению</p>
+            </div>
+
+            <div id="capsulesGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+        </section>
+
+    </main>
+
+    <!-- 7. ПЛАВАЮЩАЯ КНОПКА В ПРАВОМ НИЖНЕМ УГЛУ: «НАЖМИ, ЕСЛИ СКУЧАЕШЬ 💓» -->
+    <div class="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 max-w-[88vw]">
+        <div id="missYouBubble" class="hidden glass-card rounded-2xl px-4 py-3 text-xs sm:text-sm text-rose-50 shadow-2xl border border-[#ff4d8d]/45 max-w-[290px] text-right">
+            Я тоже безумно скучаю по тебе прямо сейчас ❤️
+        </div>
+        <button type="button" onclick="triggerMissYou(event)" class="px-5 py-3.5 rounded-full bg-gradient-to-r from-[#ff4d8d] to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-medium text-xs sm:text-sm shadow-[0_8px_30px_rgba(255,77,141,0.55)] flex items-center gap-2 transition-transform active:scale-95">
+            <span>Нажми, если скучаешь 💓</span>
+        </button>
+    </div>
+
+    <!-- Футер -->
+    <footer class="relative z-10 border-t border-rose-200/10 py-7 text-center text-xs text-rose-200/55 px-4">
+        <p class="font-serif italic text-base text-rose-200/85 mb-1">Любимой Лизе от её Айдара</p>
+        <p>Никакие километры не разлучат два сердца, которые бьются в унисон ❤️</p>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО: КАПСУЛА «ОТКРОЙ, КОГДА...» -->
+    <div id="capsuleModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center">
+            <div id="capsuleModalIcon" class="text-4xl mb-2">💌</div>
+            <span class="text-[11px] uppercase tracking-[0.2em] text-[#d4af37]">Послание сквозь расстояние</span>
+            <h3 id="capsuleModalTitle" class="font-serif text-2xl sm:text-3xl font-semibold text-rose-50 mt-1 mb-4">Открой, когда...</h3>
+
+            <div class="bg-black/45 border border-rose-200/15 rounded-2xl p-5 mb-6">
+                <p id="capsuleModalBody" class="font-serif italic text-lg sm:text-2xl text-rose-50 leading-relaxed whitespace-pre-line"></p>
+            </div>
+
+            <button type="button" onclick="closeModal('capsuleModal')" class="px-7 py-3 rounded-full bg-gradient-to-r from-[#ff4d8d] to-rose-600 text-white text-xs sm:text-sm font-semibold shadow-lg">
+                Прижать к сердцу ❤️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           ДАННЫЕ И КОНСТАНТЫ
+           ========================================================================== */
+        const START_DATE = '2026-06-23T00:00:00';
+
+        const REASONS = [
+            "За то, как загораются твои глаза даже через экран нашего видеозвонка.",
+            "За твой голос в трубке, который мгновенно успокаивает и согревает душу.",
+            "За то, что никакие километры не способны уменьшить мою любовь к тебе.",
+            "За каждое твоё «доброе утро» и «спокойной ночи», с которых начинается и заканчивается мой день.",
+            "За то, как сильно я жду нашу встречу — и знаю, что она будет самой счастливой.",
+            "За твою нежность, чуткость и невероятное тепло, которое я чувствую даже на расстоянии.",
+            "За то, как красиво ты смеёшься — это моя любимая мелодия.",
+            "За наши долгие ночные разговоры обо всём на свете, когда не хочется класть трубку.",
+            "За то, что рядом с тобой (даже мысленно) мне хочется становиться лучше каждый день.",
+            "За твои голосовые сообщения, которые я готов переслушивать снова и снова.",
+            "За твою женственность, грацию и неповторимый шарм.",
+            "За то, как ты умеешь поддержать меня одним тёплым словом.",
+            "За твоё искреннее, доброе и чистое сердце.",
+            "За то, что ты — мой главный повод улыбаться посреди самого сложного дня.",
+            "За нашу особую связь, для которой не существует границ и часовых поясов.",
+            "За то, как мы понимаем друг друга с полуслова и с одного взгляда.",
+            "За твои мечты о нашем будущем, которые мы обязательно воплотим вместе.",
+            "За то, что ты вдохновляешь меня каждый день.",
+            "За каждую секунду наших звонков, которую хочется поставить на паузу.",
+            "За твою красоту — внешнюю и ту, что светится у тебя внутри.",
+            "За то, как бережно ты относишься к нашим чувствам.",
+            "За предвкушение того момента, когда я наконец смогу обнять тебя по-настоящему.",
+            "За то, что с тобой мне всегда уютно и спокойно.",
+            "За то, что ты — мой лучший друг, моя муза и моя главная любовь.",
+            "Просто за то, что ты есть в моей жизни. Ты — моё главное чудо."
+        ];
+
+        const LOVE_LETTER = `Лиза, любимая моя,\n\nПрямо сейчас между нами километры, но если бы ты только знала, насколько близко ты находишься к моему сердцу. Ты — первая мысль, с которой я просыпаюсь, и самое тёплое чувство, с которым я засыпаю.\n\nДа, расстояние иногда проверяет нас на прочность, и мне безумно не хватает возможности просто взять тебя за руку прямо сейчас. Но каждый твой звонок, каждое сообщение и твоя улыбка на экране напоминают мне, ради чего всё это. Наша встреча обязательно состоится, и я обниму тебя так крепко, что все километры между нами просто исчезнут.\n\nПомни: я всегда рядом, я всегда на твоей стороне и люблю тебя с каждым днём только сильнее.`;
+
+        const FLOWERS_DATA = [
+            { id: 0, x: 180, y: 112, scale: 1.15, type: 'rose', note: '«Этот главный цветок — за то, что ты сделала мою жизнь самой счастливой ❤️»' },
+            { id: 1, x: 110, y: 152, scale: 1.0, type: 'peony', note: '«Этот нежный пион — чтобы ты улыбнулась прямо сейчас, где бы ты ни была 🌸»' },
+            { id: 2, x: 250, y: 152, scale: 1.0, type: 'peony', note: '«Этот цветок — за твой самый красивый голос, который согревает меня сквозь километры ✨»' },
+            { id: 3, x: 142, y: 190, scale: 0.92, type: 'gold', note: '«Этот золотой бутон — за наши будущие встречи и самые крепкие объятия 👑»' },
+            { id: 4, x: 218, y: 190, scale: 0.92, type: 'gold', note: '«Этот цветок — за каждую твою тёплую улыбку и сияние твоих глаз ☀️»' },
+            { id: 5, x: 86, y: 216, scale: 0.88, type: 'rose', note: '«Этот бутон — напоминание, что я думаю о тебе каждую свободную минуту 💌»' },
+            { id: 6, x: 274, y: 216, scale: 0.88, type: 'rose', note: '«А этот цветок — обещание, что очень скоро я подарю тебе такой же букет вживую 🌹»' }
+        ];
+
+        const CAPSULES_DATA = [
+            {
+                icon: '🌧️',
+                title: 'Когда грустно без меня',
+                subtitle: 'Если расстояние особенно чувствуется',
+                body: 'Лиза, солнышко моё, я знаю, как порой тяжело, когда нельзя просто прижаться друг к другу. Но закрой глаза на секунду и представь мои руки у себя на плечах.\n\nЭта разлука временная, а наша любовь — настоящая. Я горжусь нами и безумно тебя люблю. Напиши или позвони мне прямо сейчас — я всегда рядом.'
+            },
+            {
+                icon: '🌙',
+                title: 'Когда не можешь уснуть',
+                subtitle: 'Для тихих ночей под одной луной',
+                body: 'Спи спокойно, моя хорошая. Пусть эта ночь укроет тебя самым мягким одеялом из моей нежности.\n\nПредставь, что я лежу рядом, глажу тебя по волосам и тихо шепчу, как сильно я тебя люблю. Сладких снов, моё чудо — я всегда рядом с тобой.'
+            },
+            {
+                icon: '❤️‍🔥',
+                title: 'Когда хочешь услышать, как сильно я люблю',
+                subtitle: 'Напоминание на все 1000%',
+                body: 'Я люблю тебя больше, чем можно уместить в любых словах, сообщениях и звонках. Люблю твой характер, твою нежность, твой смех и каждый твой взгляд.\n\nТы — лучшее, что случалось в моей жизни. И никакие города между нами никогда этого не изменят.'
+            }
+        ];
+
+        const HUG_MESSAGES = [
+            "«Объятие доставлено прямо в твоё сердце ❤️ Закрой глаза и почувствуй моё тепло!»",
+            "«Я крепко-крепко обнимаю тебя сквозь экран — никакие километры не помеха ✨»",
+            "«Ты — самая прекрасная девушка на свете, и я безумно по тебе скучаю!»",
+            "«Отправляю тебе волну самой нежной любви и тысячу поцелуев 😘»",
+            "«Совсем скоро это объятие станет настоящим, а пока — я всегда рядом с тобой!»"
+        ];
+
+        const MISS_YOU_MESSAGES = [
+            "Я тоже безумно скучаю по тебе прямо сейчас... ❤️",
+            "Считаю каждую минуту до нашего следующего звонка и встречи ✨",
+            "Ты всегда в моих мыслях, моё солнышко ☀️",
+            "Закрой глаза — я мысленно держу тебя за руку 💓",
+            "Никакие километры не мешают мне любить тебя сильнее с каждой секундой 🌹"
+        ];
+
+        let currentReasonIdx = 0;
+        let hugCount = 0;
+        const bloomedSet = new Set();
+
+        /* ==========================================================================
+           1. ЖИВОЙ ТАЙМЕР ОТНОШЕНИЙ
+           ========================================================================== */
+        function pluralize(number, titles) {
+            const cases = [2, 0, 1, 1, 1, 2];
+            return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+        }
+
+        function updateTimerTick() {
+            const startMs = new Date(START_DATE).getTime();
+            const nowMs = Date.now();
+            let diff = isNaN(startMs) ? 0 : Math.max(0, nowMs - startMs);
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            diff -= days * (1000 * 60 * 60 * 24);
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            diff -= hours * (1000 * 60 * 60);
+            const minutes = Math.floor(diff / (1000 * 60));
+            diff -= minutes * (1000 * 60);
+            const seconds = Math.floor(diff / 1000);
+
+            document.getElementById('tDays').textContent = days;
+            document.getElementById('tHours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('tMinutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('tSeconds').textContent = String(seconds).padStart(2, '0');
+
+            document.getElementById('tDaysLabel').textContent = pluralize(days, ['день', 'дня', 'дней']);
+            document.getElementById('tHoursLabel').textContent = pluralize(hours, ['час', 'часа', 'часов']);
+            document.getElementById('tMinutesLabel').textContent = pluralize(minutes, ['минута', 'минуты', 'минут']);
+            document.getElementById('tSecondsLabel').textContent = pluralize(seconds, ['секунда', 'секунды', 'секунд']);
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ==========================================================================
+           2. ИНТЕРАКТИВНЫЙ БУКЕТ («ЖИВОЙ БУКЕТ ДЛЯ ТЕБЯ»)
+           ========================================================================== */
+        function renderBouquetFlowers() {
+            const layer = document.getElementById('bouquetFlowersLayer');
+            layer.innerHTML = '';
+
+            FLOWERS_DATA.forEach(flower => {
+                const isBloomed = bloomedSet.has(flower.id);
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.setAttribute('transform', `translate(${flower.x}, ${flower.y}) scale(${isBloomed ? flower.scale : 0.42})`);
+                g.classList.add('flower-node');
+
+                if (!isBloomed) {
+                    g.innerHTML = `
+                        <ellipse cx="0" cy="0" rx="14" ry="20" fill="url(#roseGrad)" stroke="#ffb3c6" stroke-width="1.5"/>
+                        <path d="M-12,8 Q0,24 12,8 Q0,14 -12,8" fill="#10b981"/>
+                    `;
+                } else if (flower.type === 'rose') {
+                    g.innerHTML = `
+                        <circle cx="0" cy="0" r="24" fill="url(#roseGrad)"/>
+                        <path d="M-16,-6 C-20,-20 0,-26 14,-14 C24,-4 16,18 0,20 C-16,20 -22,6 -12,-6 C-6,-14 8,-12 10,-2 C12,6 2,12 -4,6" fill="none" stroke="#fff1f2" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>
+                    `;
+                } else if (flower.type === 'peony') {
+                    g.innerHTML = `
+                        <circle cx="0" cy="-10" r="14" fill="url(#peonyGrad)" opacity="0.92"/>
+                        <circle cx="10" cy="-3" r="14" fill="url(#peonyGrad)" opacity="0.92"/>
+                        <circle cx="6" cy="9" r="14" fill="url(#peonyGrad)" opacity="0.92"/>
+                        <circle cx="-6" cy="9" r="14" fill="url(#peonyGrad)" opacity="0.92"/>
+                        <circle cx="-10" cy="-3" r="14" fill="url(#peonyGrad)" opacity="0.92"/>
+                        <circle cx="0" cy="0" r="8" fill="#fde68a"/>
+                    `;
+                } else {
+                    g.innerHTML = `
+                        <ellipse cx="0" cy="-13" rx="6" ry="12" fill="url(#goldGrad)"/>
+                        <ellipse cx="0" cy="13" rx="6" ry="12" fill="url(#goldGrad)"/>
+                        <ellipse cx="-13" cy="0" rx="12" ry="6" fill="url(#goldGrad)"/>
+                        <ellipse cx="13" cy="0" rx="12" ry="6" fill="url(#goldGrad)"/>
+                        <ellipse cx="-9" cy="-9" rx="7" ry="7" fill="url(#goldGrad)"/>
+                        <ellipse cx="9" cy="9" rx="7" ry="7" fill="url(#goldGrad)"/>
+                        <circle cx="0" cy="0" r="6" fill="#fffbeb"/>
+                    `;
+                }
+
+                g.onclick = (e) => {
+                    e.stopPropagation();
+                    bloomedSet.add(flower.id);
+                    renderBouquetFlowers();
+                    document.getElementById('bloomedCounter').textContent = bloomedSet.size;
+                    document.getElementById('flowerNoteBadge').textContent = `🌸 Цветок #${flower.id + 1} распустился`;
+                    document.getElementById('flowerNoteText').textContent = flower.note;
+                    spawnParticles(e.clientX, e.clientY, 18, true);
+                };
+
+                layer.appendChild(g);
+            });
+        }
+
+        function bloomAllFlowers(e) {
+            FLOWERS_DATA.forEach((flower, idx) => {
+                setTimeout(() => {
+                    bloomedSet.add(flower.id);
+                    renderBouquetFlowers();
+                    document.getElementById('bloomedCounter').textContent = bloomedSet.size;
+                    document.getElementById('flowerNoteBadge').textContent = `🌸 Цветок #${flower.id + 1} распустился`;
+                    document.getElementById('flowerNoteText').textContent = flower.note;
+                }, idx * 180);
+            });
+            if (e) spawnParticles(e.clientX, e.clientY, 26, true);
+        }
+
+        function goToAndBloomBouquet(e) {
+            scrollToSection('bouquet-section');
+            setTimeout(() => bloomAllFlowers(e), 450);
+        }
+
+        function showerRosePetals(e) {
+            if (e) spawnParticles(e.clientX, e.clientY, 20, true);
+            for (let i = 0; i < 45; i++) {
+                setTimeout(() => {
+                    const rx = Math.random() * window.innerWidth;
+                    spawnParticles(rx, -10, 1, true, true);
+                }, i * 45);
+            }
+        }
+
+        /* ==========================================================================
+           3. ТАЙНОЕ ПИСЬМО С ПЕЧАТЬЮ И ЭФФЕКТОМ ПЕЧАТНОЙ МАШИНКИ
+           ========================================================================== */
+        let typingInterval = null;
+
+        function openLoveLetter(e) {
+            if (e) spawnParticles(e.clientX, e.clientY, 24, false);
+            document.getElementById('envelopeClosed').classList.add('hidden');
+            document.getElementById('envelopeOpened').classList.remove('hidden');
+
+            const contentEl = document.getElementById('letterContent');
+            const sigEl = document.getElementById('letterSignature');
+            const skipBtn = document.getElementById('skipTypingBtn');
+
+            clearInterval(typingInterval);
+            contentEl.textContent = '';
+            contentEl.classList.add('typing-cursor');
+            sigEl.classList.remove('opacity-100');
+            sigEl.classList.add('opacity-0');
+            skipBtn.classList.remove('hidden');
+
+            let idx = 0;
+            typingInterval = setInterval(() => {
+                if (idx < LOVE_LETTER.length) {
+                    contentEl.textContent += LOVE_LETTER.charAt(idx);
+                    idx++;
+                } else {
+                    finishLetterTyping();
+                }
+            }, 24);
+        }
+
+        function finishLetterTyping() {
+            clearInterval(typingInterval);
+            const contentEl = document.getElementById('letterContent');
+            const sigEl = document.getElementById('letterSignature');
+            const skipBtn = document.getElementById('skipTypingBtn');
+
+            contentEl.textContent = LOVE_LETTER;
+            contentEl.classList.remove('typing-cursor');
+            sigEl.classList.remove('opacity-0');
+            sigEl.classList.add('opacity-100');
+            skipBtn.classList.add('hidden');
+        }
+
+        function closeLoveLetter() {
+            clearInterval(typingInterval);
+            document.getElementById('envelopeOpened').classList.add('hidden');
+            document.getElementById('envelopeClosed').classList.remove('hidden');
+        }
+
+        /* ==========================================================================
+           4. КОЛОДА «25 ПРИЧИН, ПОЧЕМУ Я ЛЮБЛЮ ТЕБЯ»
+           ========================================================================== */
+        function renderReasonCard(animate = false) {
+            const wrapper = document.getElementById('reasonTextWrapper');
+            const textEl = document.getElementById('reasonText');
+            const idxEl = document.getElementById('reasonIndex');
+            const totalEl = document.getElementById('reasonTotal');
+
+            totalEl.textContent = REASONS.length;
+            idxEl.textContent = currentReasonIdx + 1;
+
+            if (animate) {
+                wrapper.classList.add('reason-out');
+                setTimeout(() => {
+                    textEl.textContent = REASONS[currentReasonIdx];
+                    wrapper.classList.remove('reason-out');
+                }, 200);
+            } else {
+                textEl.textContent = REASONS[currentReasonIdx];
+            }
+        }
+
+        function nextReason(e) {
+            currentReasonIdx = (currentReasonIdx + 1) % REASONS.length;
+            renderReasonCard(true);
+            if (e && e.clientX) spawnParticles(e.clientX, e.clientY, 14, false);
+        }
+
+        function prevReason() {
+            currentReasonIdx = (currentReasonIdx - 1 + REASONS.length) % REASONS.length;
+            renderReasonCard(true);
+        }
+
+        /* ==========================================================================
+           5. ХАБ СВЯЗИ НА РАССТОЯНИИ (ЛУНА, ОБЪЯТИЕ, КАПСУЛЫ)
+           ========================================================================== */
+        function initMoonPhase() {
+            const now = new Date();
+            const knownNewMoon = new Date('2025-01-29T12:36:00Z').getTime();
+            const cycleMs = 29.53058867 * 24 * 60 * 60 * 1000;
+            const phase = (((now.getTime() - knownNewMoon) % cycleMs) + cycleMs) % cycleMs / cycleMs;
+
+            const illum = Math.round((1 - Math.cos(phase * 2 * Math.PI)) / 2 * 100);
+            document.getElementById('moonIllumination').textContent = illum + '%';
+
+            const badge = document.getElementById('moonPhaseBadge');
+            const shadow = document.getElementById('moonShadow');
+
+            if (phase < 0.06 || phase > 0.94) {
+                badge.textContent = 'Новолуние';
+                shadow.style.transform = 'translateX(10%)';
+            } else if (phase < 0.44) {
+                badge.textContent = 'Растущая луна';
+                shadow.style.transform = 'translateX(-60%)';
+            } else if (phase < 0.56) {
+                badge.textContent = 'Полнолуние';
+                shadow.style.opacity = '0';
+            } else {
+                badge.textContent = 'Убывающая луна';
+                shadow.style.transform = 'translateX(60%)';
+            }
+        }
+
+        let lastHugIdx = -1;
+        function sendScreenHug(e) {
+            hugCount++;
+            document.getElementById('hugCounter').textContent = hugCount;
+
+            if (navigator.vibrate) {
+                try { navigator.vibrate([100, 50, 200]); } catch (_) {}
+            }
+
+            const wave = document.getElementById('hugWaveOverlay');
+            wave.classList.remove('hug-wave-run');
+            void wave.offsetWidth;
+            wave.classList.add('hug-wave-run');
+
+            if (e) spawnParticles(e.clientX, e.clientY, 30, false);
+
+            let idx = Math.floor(Math.random() * HUG_MESSAGES.length);
+            if (idx === lastHugIdx && HUG_MESSAGES.length > 1) idx = (idx + 1) % HUG_MESSAGES.length;
+            lastHugIdx = idx;
+
+            document.getElementById('hugStatusText').textContent = HUG_MESSAGES[idx];
+        }
+
+        function renderCapsules() {
+            const grid = document.getElementById('capsulesGrid');
+            grid.innerHTML = '';
+
+            CAPSULES_DATA.forEach(cap => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl p-5 sm:p-6 cursor-pointer hover:border-[#ff4d8d]/55 transition-all';
+                card.onclick = (e) => {
+                    spawnParticles(e.clientX, e.clientY, 16, false);
+                    document.getElementById('capsuleModalIcon').textContent = cap.icon;
+                    document.getElementById('capsuleModalTitle').textContent = cap.title;
+                    document.getElementById('capsuleModalBody').textContent = cap.body;
+                    openModal('capsuleModal');
+                };
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-2xl">${cap.icon}</span>
+                        <span class="text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full bg-[#ff4d8d]/20 text-rose-100 border border-rose-300/20">Открыть</span>
+                    </div>
+                    <h4 class="font-serif text-xl sm:text-2xl font-semibold text-rose-50 mb-1">${cap.title}</h4>
+                    <p class="text-xs text-rose-200/70">${cap.subtitle}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(id) {
+            const m = document.getElementById(id);
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        /* ==========================================================================
+           6. ПЛАВАЮЩАЯ КНОПКА «НАЖМИ, ЕСЛИ СКУЧАЕШЬ 💓»
+           ========================================================================== */
+        let missBubbleTimer = null;
+        let lastMissIdx = -1;
+
+        function triggerMissYou(e) {
+            if (navigator.vibrate) {
+                try { navigator.vibrate([60, 40, 120]); } catch (_) {}
+            }
+            if (e) spawnParticles(e.clientX, e.clientY, 28, false);
+
+            let idx = Math.floor(Math.random() * MISS_YOU_MESSAGES.length);
+            if (idx === lastMissIdx && MISS_YOU_MESSAGES.length > 1) idx = (idx + 1) % MISS_YOU_MESSAGES.length;
+            lastMissIdx = idx;
+
+            const bubble = document.getElementById('missYouBubble');
+            bubble.textContent = MISS_YOU_MESSAGES[idx];
+            bubble.classList.remove('hidden');
+
+            clearTimeout(missBubbleTimer);
+            missBubbleTimer = setTimeout(() => {
+                bubble.classList.add('hidden');
+            }, 4500);
+        }
+
+        /* ==========================================================================
+           7. ЭМБИЕНТ-МЕЛОДИЯ ЛЮБВИ (WEB AUDIO API)
+           ========================================================================== */
+        let audioCtx = null;
+        let isPlayingMusic = false;
+        let musicLoopTimer = null;
+        let chordIdx = 0;
+
+        const ROMANTIC_CHORDS = [
+            [174.61, 220.00, 261.63, 329.63],
+            [164.81, 196.00, 246.94, 293.66],
+            [146.83, 174.61, 220.00, 261.63],
+            [130.81, 196.00, 246.94, 329.63]
+        ];
+
+        function playChordPad(freqs) {
+            if (!audioCtx || !isPlayingMusic) return;
+            const now = audioCtx.currentTime;
+
+            freqs.forEach((f, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+
+                osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(f, now + i * 0.22);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(620, now);
+
+                gain.gain.setValueAtTime(0.0001, now + i * 0.22);
+                gain.gain.exponentialRampToValueAtTime(0.032, now + i * 0.22 + 1.1);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.22 + 4.3);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + i * 0.22);
+                osc.stop(now + i * 0.22 + 4.4);
+            });
+        }
+
+        function toggleAmbientMusic() {
+            const btn = document.getElementById('musicToggleBtn');
+            const label = document.getElementById('musicBtnLabel');
+
+            if (!isPlayingMusic) {
+                try {
+                    if (!audioCtx) {
+                        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                        audioCtx = new AudioContextClass();
+                    }
+                    if (audioCtx.state === 'suspended') audioCtx.resume();
+                } catch (err) {
+                    console.warn('Web Audio API не поддерживается:', err);
+                    return;
+                }
+
+                isPlayingMusic = true;
+                btn.classList.add('playing', 'border-[#ff4d8d]/70');
+                label.textContent = 'Пауза';
+
+                playChordPad(ROMANTIC_CHORDS[chordIdx]);
+                chordIdx = (chordIdx + 1) % ROMANTIC_CHORDS.length;
+                musicLoopTimer = setInterval(() => {
+                    playChordPad(ROMANTIC_CHORDS[chordIdx]);
+                    chordIdx = (chordIdx + 1) % ROMANTIC_CHORDS.length;
+                }, 3900);
+            } else {
+                isPlayingMusic = false;
+                clearInterval(musicLoopTimer);
+                btn.classList.remove('playing', 'border-[#ff4d8d]/70');
+                label.textContent = 'Мелодия любви';
+            }
+        }
+
+        /* ==========================================================================
+           8. CANVAS АНИМАЦИИ: ЗВЁЗДНОЕ НЕБО, СЕРДЕЧКИ И ЛЕПЕСТКИ РОЗ
+           ========================================================================== */
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        const fxCanvas = document.getElementById('fxCanvas');
+        const fxCtx = fxCanvas.getContext('2d');
+
+        let stars = [];
+        let bgHearts = [];
+        let fxParticles = [];
+
+        function resizeCanvases() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+            fxCanvas.width = window.innerWidth;
+            fxCanvas.height = window.innerHeight;
+
+            const starCount = Math.min(95, Math.floor((bgCanvas.width * bgCanvas.height) / 10000));
+            stars = Array.from({ length: starCount }, () => ({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                r: Math.random() * 1.5 + 0.3,
+                alpha: Math.random(),
+                speed: Math.random() * 0.015 + 0.004
+            }));
+
+            const heartCount = Math.min(15, Math.floor(bgCanvas.width / 65));
+            bgHearts = Array.from({ length: heartCount }, () => ({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                size: Math.random() * 7 + 5,
+                vy: -(Math.random() * 0.4 + 0.15),
+                phase: Math.random() * Math.PI * 2,
+                alpha: Math.random() * 0.2 + 0.06
+            }));
+        }
+
+        function drawHeart(ctx, x, y, size, color, alpha) {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            const topH = size * 0.3;
+            ctx.moveTo(x, y + topH);
+            ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topH);
+            ctx.bezierCurveTo(x - size / 2, y + (size + topH) / 2, x, y + (size + topH) / 1.4, x, y + size);
+            ctx.bezierCurveTo(x, y + (size + topH) / 1.4, x + size / 2, y + (size + topH) / 2, x + size / 2, y + topH);
+            ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + topH);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawPetal(ctx, p) {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.globalAlpha = Math.max(0, Math.min(1, p.alpha));
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size * 0.65, p.size * 0.38, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function spawnParticles(x, y, count = 16, asPetal = false, fallingFromTop = false) {
+            const palette = ['#ff4d8d', '#ffb3c6', '#fb7185', '#f3d078', '#fda4af'];
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+                const speed = fallingFromTop ? (Math.random() * 1.2 + 0.4) : (Math.random() * 4.2 + 1.4);
+                fxParticles.push({
+                    x,
+                    y,
+                    vx: fallingFromTop ? (Math.random() - 0.5) * 1.4 : Math.cos(angle) * speed,
+                    vy: fallingFromTop ? (Math.random() * 2.2 + 1.4) : (Math.sin(angle) * speed - 1.2),
+                    size: Math.random() * 10 + 7,
+                    color: palette[Math.floor(Math.random() * palette.length)],
+                    alpha: 1,
+                    decay: fallingFromTop ? 0.005 : (Math.random() * 0.018 + 0.012),
+                    isPetal: asPetal,
+                    angle: Math.random() * Math.PI * 2,
+                    spin: (Math.random() - 0.5) * 0.08,
+                    falling: fallingFromTop
+                });
+            }
+        }
+
+        function animateCanvasLoop() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+            stars.forEach(s => {
+                s.alpha += s.speed;
+                if (s.alpha > 1 || s.alpha < 0.15) s.speed *= -1;
+                bgCtx.beginPath();
+                bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                bgCtx.fillStyle = `rgba(255, 241, 242, ${s.alpha * 0.75})`;
+                bgCtx.fill();
+            });
+
+            bgHearts.forEach(h => {
+                h.y += h.vy;
+                h.phase += 0.02;
+                h.x += Math.sin(h.phase) * 0.3;
+                if (h.y < -20) {
+                    h.y = bgCanvas.height + 20;
+                    h.x = Math.random() * bgCanvas.width;
+                }
+                drawHeart(bgCtx, h.x, h.y, h.size, '#ff4d8d', h.alpha);
+            });
+
+            fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+            for (let i = fxParticles.length - 1; i >= 0; i--) {
+                const p = fxParticles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                if (!p.falling) p.vy += 0.05;
+                p.angle += p.spin;
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0 || p.y > fxCanvas.height + 30) {
+                    fxParticles.splice(i, 1);
+                    continue;
+                }
+
+                if (p.isPetal) {
+                    drawPetal(fxCtx, p);
+                } else {
+                    drawHeart(fxCtx, p.x, p.y, p.size, p.color, p.alpha);
+                }
+            }
+
+            requestAnimationFrame(animateCanvasLoop);
+        }
+
+        /* ==========================================================================
+           ЗАПУСК ПРИЛОЖЕНИЯ
+           ========================================================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                updateTimerTick();
+                setInterval(updateTimerTick, 1000);
+
+                renderBouquetFlowers();
+                renderReasonCard(false);
+                initMoonPhase();
+                renderCapsules();
+
+                resizeCanvases();
+                window.addEventListener('resize', resizeCanvases);
+                animateCanvasLoop();
+            } catch (err) {
+                console.error('Ошибка инициализации:', err);
+            }
+        });
+    </script>
+</body>
+</html>
